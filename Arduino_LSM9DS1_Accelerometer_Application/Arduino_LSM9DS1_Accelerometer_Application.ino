@@ -43,14 +43,44 @@ void loop() {
     IMU.readAcceleration(x, y, z);
   }
 
-  Serial.print("ACC Var:");
-  Serial.print(x);
+  Serial.print("X:");
+  Serial.print(x/sqrt(x*x+y*y+z*z));
+
   Serial.print(",");
-  Serial.print("Static:");
-  Serial.println(static_variable);
+  Serial.print("Y:");
+  Serial.print(y/sqrt(x*x+y*y+z*z));
+
+  Serial.print(",");
+  Serial.print("Z:");
+  Serial.print(z/sqrt(x*x+y*y+z*z));
+  
+  Serial.print(",");
+  Serial.print("sum:");
+  Serial.println(sq(x/sqrt(x*x+y*y+z*z)) + sq(y/sqrt(x*x+y*y+z*z)) + sq(z/sqrt(x*x+y*y+z*z)));
 }
 
+
 /*
+以下測試normalize
+  Serial.print("X:");
+  Serial.print(x/sqrt(x*x+y*y+z*z));
+
+  Serial.print(",");
+  Serial.print("Y:");
+  Serial.print(y/sqrt(x*x+y*y+z*z));
+
+  Serial.print(",");
+  Serial.print("Z:");
+  Serial.print(z/sqrt(x*x+y*y+z*z));
+  
+  Serial.print(",");
+  Serial.print("sum:");
+  Serial.println(sq(x/sqrt(x*x+y*y+z*z)) + sq(y/sqrt(x*x+y*y+z*z)) + sq(z/sqrt(x*x+y*y+z*z)));
+*/
+
+
+
+/*  以下是原始程式
 void loop() {
 
   if (IMU.accelerationAvailable()) {
