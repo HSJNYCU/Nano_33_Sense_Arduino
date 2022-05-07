@@ -23,9 +23,17 @@ datasheet請參考:https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
 
 #include <Arduino_LSM9DS1.h>
 
-float ax, ay, az;  // acc
-float gx, gy, gz;  // gyro
-float mx, my, mz;  // mag
+float ax, ay, az;  // acc value
+float gx, gy, gz;  // gyro value
+float mx, my, mz;  // mag value
+float a_sq, m_sq;  // acc and mag square root
+
+float axn, ayn, azn;  // normalized acc
+float mxn, myn, mzn;  // normalized mag
+
+float qacc[4], qmag[4];  // quaternion of acc and mag
+
+float R_acc[3][3];
 
 void setup() {
   Serial.begin(9600);
@@ -53,6 +61,34 @@ void loop() {
   IMU.readMagneticField(mx, my, mz);
   }
 
+// normalize
+a_sq = sqrt(sq(ax)+sq(ay)+sq(az));
+axn = ax/a_sq;
+ayn = ay/a_sq;
+azn = az/a_sq;
+
+m_sq = sqrt(sq(mx)+sq(my)+sq(mz));
+mxn = mx/m_sq;
+myn = my/m_sq;
+mzn = mz/m_sq;
+
+// acc quaternion from eq.(25)
+  if (azn >= 0){
+    qacc[0] = sqrt((azn+1)/2);
+    qacc[1] = -ayn/sqrt(2*(azn+1));
+    qacc[2] = axn/sqrt(2*(azn+1));
+    qacc[3] = 0;
+    }
+  else {
+    qacc[0] = -ayn/sqrt(2*(1-azn));
+    qacc[1] = sqrt((1-azn)/2);
+    qacc[2] = 0;
+    qacc[3] = axn/sqrt(2*(1-azn));
+  }
+
+Serial.println(quaternion2Theta(qacc[0],qacc[1],qacc[2],qacc[3]));
+// acc rotation matrix from quaternion, see eq.(9)
+
 /*  
   Serial.print("X:");
   Serial.print(x/sqrt(x*x+y*y+z*z));
@@ -71,11 +107,30 @@ void loop() {
 */
 }
 
+// Quaternion to Euler
+float quaternion2Phi(float q0, float q1, float q2, float q3){
+  float phi;
+  phi = atan2( 2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2) );
+  return phi;
+}
 
-float quaternion_pruduct(float p0, float p1, float p2, float p3, float q0, float q1, float q2, float q3){
-  float result
-  result
-  }
+float quaternion2Theta(float q0, float q1, float q2, float q3){
+  float theta;
+  theta = asin( 2*(q0*q2-q3*q1) );
+  return theta;
+}
+
+float quaternion2Psi(float q0, float q1, float q2, float q3){
+  float psi;
+  psi = atan2( 2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3) );
+  return psi;
+}
+
+//float quaternion_pruduct(float p[4], float q[4]){
+//  float result[4];
+//  result[1] = p[1] + q[1];
+//  return result[2];
+//  }
 
 /*
  * 
