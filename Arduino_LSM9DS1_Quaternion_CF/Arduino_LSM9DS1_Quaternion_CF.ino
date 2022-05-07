@@ -16,17 +16,16 @@ datasheet請參考:https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
 2022/05/07: 
 1. 開始撰寫程式、確認acc, gyro, mag三個sensor的連接無問題
 2. 寫子程式: (a)quaternion_pruduct.  (b)quaternion2Euler
-3. 測試
+3. 測試文章section 3的做法，未來將作為CF的initial condition
 
 */
 
 
 #include <Arduino_LSM9DS1.h>
 
-float x, y, z;
-int degreesX = 0;
-int degreesY = 0;
-int static_variable = 1;
+float ax, ay, az;  // acc
+float gx, gy, gz;  // gyro
+float mx, my, mz;  // mag
 
 void setup() {
   Serial.begin(9600);
@@ -38,17 +37,23 @@ void setup() {
     while (1);
   }
 
-  Serial.print("Accelerometer sample rate = ");
-  Serial.print(IMU.accelerationSampleRate());
-  Serial.println("Hz");
 }
 
 void loop() {
 
   if (IMU.accelerationAvailable()) {
-    IMU.readAcceleration(x, y, z);
+    IMU.readAcceleration(ax, ay, az);
   }
 
+  if (IMU.gyroscopeAvailable()) {
+  IMU.readGyroscope(gx, gy, gz);
+  }
+
+  if (IMU.magneticFieldAvailable()) {
+  IMU.readMagneticField(mx, my, mz);
+  }
+
+/*  
   Serial.print("X:");
   Serial.print(x/sqrt(x*x+y*y+z*z));
 
@@ -63,4 +68,34 @@ void loop() {
   Serial.print(",");
   Serial.print("sum:");
   Serial.println(sq(x/sqrt(x*x+y*y+z*z)) + sq(y/sqrt(x*x+y*y+z*z)) + sq(z/sqrt(x*x+y*y+z*z)));
+*/
 }
+
+
+float quaternion_pruduct(float p0, float p1, float p2, float p3, float q0, float q1, float q2, float q3){
+  float result
+  result
+  }
+
+/*
+ * 
+基本的資料讀取
+<Acc>
+  float x, y, z;
+  if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(x, y, z);
+  }
+
+<Gyro>
+  float x, y, z;
+  if (IMU.gyroscopeAvailable()) {
+    IMU.readGyroscope(x, y, z);
+  }
+
+<Mag>
+  float x, y, z;
+  if (IMU.magneticFieldAvailable()) {
+    IMU.readMagneticField(x, y, z);
+  }
+    
+*/
