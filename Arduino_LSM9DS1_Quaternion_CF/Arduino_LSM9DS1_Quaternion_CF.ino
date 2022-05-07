@@ -65,18 +65,28 @@ void loop() {
   IMU.readMagneticField(mx, my, mz);
   }
 
+// 方向校正，因為sensor先天方向定義問題，詳細參考datasheet or https://forum.arduino.cc/t/ble-sense-ahrs/636949/5
+// 以北東下(NED)為測試校正方法
+ax = ax;
+ay = ay;
+az = -az;
+gx = gx;
+gy = gy;
+gz = -gz;
+mx = -mx;
+my = my;
+mz = -mz;
+
 // normalize
 a_sq = sqrt(sq(ax)+sq(ay)+sq(az));
 axn = ax/a_sq;
 ayn = ay/a_sq;
 azn = az/a_sq;
 
-// 注意: Nano 33 BLE/BLE Sense 的 Magnetometer x軸是acc x軸; y軸是acc z軸; z軸是acc y軸
-// 在此直接調換順序，方便後續程式撰寫符號不混亂
 m_sq = sqrt(sq(mx)+sq(my)+sq(mz));
 mxn = mx/m_sq;
-myn = mz/m_sq;  // 調換順序
-mzn = my/m_sq;  // 調換順序
+myn = my/m_sq;  
+mzn = mz/m_sq;  
 
 // acc quaternion from eq.(25)
   if (azn >= 0){
