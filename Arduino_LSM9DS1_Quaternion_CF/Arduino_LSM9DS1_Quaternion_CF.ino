@@ -86,7 +86,7 @@ mzn = mz/m_sq;
     qacc[3] = axn/sqrt(2*(1-azn));
   }
 
-Serial.println(quaternion2Theta(qacc[0],qacc[1],qacc[2],qacc[3]));
+Serial.println(57.29577*quaternion2Theta(qacc[0],qacc[1],qacc[2],qacc[3]));
 // acc rotation matrix from quaternion, see eq.(9)
 
 /*  
@@ -107,33 +107,30 @@ Serial.println(quaternion2Theta(qacc[0],qacc[1],qacc[2],qacc[3]));
 */
 }
 
-// Quaternion to Euler
+// Quaternion to Euler angle Phi
 float quaternion2Phi(float q0, float q1, float q2, float q3){
   float phi;
   phi = atan2( 2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2) );
   return phi;
 }
 
+// Quaternion to Euler angle Theta
 float quaternion2Theta(float q0, float q1, float q2, float q3){
   float theta;
   theta = asin( 2*(q0*q2-q3*q1) );
   return theta;
 }
 
+// Quaternion to Euler angle Psi
 float quaternion2Psi(float q0, float q1, float q2, float q3){
   float psi;
   psi = atan2( 2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3) );
   return psi;
 }
 
-//float quaternion_pruduct(float p[4], float q[4]){
-//  float result[4];
-//  result[1] = p[1] + q[1];
-//  return result[2];
-//  }
+
 
 /*
- * 
 基本的資料讀取
 <Acc>
   float x, y, z;
