@@ -17,6 +17,8 @@
 
 #include <Arduino_LSM9DS1.h>
 
+
+
 float x, y, z;
 int degreesX = 0;
 int degreesY = 0;
@@ -32,6 +34,11 @@ void setup() {
     while (1);
   }
 
+  IMU.setAccelFS(3);
+  IMU.setAccelODR(5);
+  IMU.setAccelOffset(-0.014648, -0.016655, -0.006098);
+  IMU.setAccelSlope (0.989624, 0.991003, 1.008348);
+
   Serial.print("Accelerometer sample rate = ");
   Serial.print(IMU.accelerationSampleRate());
   Serial.println("Hz");
@@ -44,15 +51,18 @@ void loop() {
   }
 
   Serial.print("X:");
-  Serial.print(x/sqrt(x*x+y*y+z*z));
+  Serial.print(x);
+  //Serial.print(x/sqrt(x*x+y*y+z*z));
 
   Serial.print(",");
   Serial.print("Y:");
-  Serial.print(y/sqrt(x*x+y*y+z*z));
+  Serial.print(y);
+  //Serial.print(y/sqrt(x*x+y*y+z*z));
 
   Serial.print(",");
   Serial.print("Z:");
-  Serial.print(z/sqrt(x*x+y*y+z*z));
+  Serial.print(z);
+  //Serial.print(z/sqrt(x*x+y*y+z*z));
   
   Serial.print(",");
   Serial.print("sum:");
